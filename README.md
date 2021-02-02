@@ -3,7 +3,7 @@
 GoQKit is the quantum circuit simulator Golang module.
 You can write a code and run the quantum calculation in Golang on your PC.
 
-![image](https://user-images.githubusercontent.com/21256885/106552633-04175780-655b-11eb-87c0-1404591b8f5d.png)
+![image](https://user-images.githubusercontent.com/21256885/106553011-d1219380-655b-11eb-8342-2a8a8c496dfe.png)
 
 ## How to use
 A sample code for entangled two qbits.
