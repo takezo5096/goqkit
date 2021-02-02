@@ -35,7 +35,7 @@ func main() {
 ````
 You'll see r1 and r2 are same value running this code because those qbits are entangled virtually in this simulator.
 
-First of all, You should make the instance of a quantum circuit by MakeQBitsCircuit(N),
+First of all, You should make a instance of a quantum circuit by MakeQBitsCircuit(N),
 N is a number of qbits you want to use.
 
 Then assign a register which has some qbits by AssignQBits(n), n is a number of qbits which this register has.
