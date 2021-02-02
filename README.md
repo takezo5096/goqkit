@@ -47,6 +47,7 @@ Finally, apply functions to qbits as you like.
 If you want to see all qbit's value as vector in the circuit, PrintQBits() or PrintQBitsComplex() is useful for it. 
 
 ## More details
+I still haven't prepared anything for the documents.
 See the source codes and comments of goqkit package by using godoc or something.
 
 And also, I created the visualizing tool for GoQKit to help you visualize your own quantum circuit and qbit's states.
