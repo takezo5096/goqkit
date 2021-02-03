@@ -69,7 +69,7 @@ but I hadn't understood deeply cuz of the lack of my quantum physics knowledge.
 So I decided to make a quantum circuit simulator to understand that using my programming skills.
 For me, it's easy to implement basic quantum bit and gates like a "Not", "Hadamard", "Z" gate, etc,
 because the circuit and bit operations are very simple and similar to classic computer's one I've already known.
-Then I figured out that advanced physics and mathematics aren't always necessarily to learn the quantum calculation logics.
+Then I figured out that advanced physics and mathematics aren't always necessarily to build a quantum circuit simulator.
 (Of course, learning those academic stuffs are still important to understand though).
 The most difficult thing for me to learn the quantum calculation 
 is just assembling those primitive gates to build the beneficial quantum algorithm.
