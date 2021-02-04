@@ -1,7 +1,7 @@
 # GoQKit
 
 GoQKit is the quantum circuit simulator Golang module.
-You can write a code and run the quantum calculation in Golang on your PC.
+You can write a code and run a quantum calculation in Golang on your PC.
 
 
 ## How to use
