@@ -38,15 +38,16 @@ type QBitsCircuit struct {
 }
 
 const (
-	OperationTypeRead  = "R"
-	OperationTypeWrite = "W"
-	OperationTypeHad   = "H"
-	OperationTypePhase = "P"
-	OperationTypeNot   = "N"
-	OperationTypeSwap  = "S"
-	OperationTypeX     = "X"
-	OperationTypeY     = "Y"
-	OperationTypeZ     = "Z"
+	OperationTypeRead   = "R"
+	OperationTypeWrite  = "W"
+	OperationTypeHad    = "H"
+	OperationTypePhase  = "P"
+	OperationTypeRotate = "Ro"
+	OperationTypeNot    = "N"
+	OperationTypeSwap   = "S"
+	OperationTypeX      = "X"
+	OperationTypeY      = "Y"
+	OperationTypeZ      = "Z"
 )
 
 type Operation struct {
@@ -432,28 +433,28 @@ func (q *QBitsCircuit) NotWithoutOp(val int, controlValue int) {
 /*
 Rotate X gate
 */
-func (q *QBitsCircuit) PhaseX(val int, controlValue int, deg float64) {
-	q.phaseImpl(val, controlValue, deg, 0, 0)
+func (q *QBitsCircuit) RotX(val int, controlValue int, deg float64) {
+	q.rotImpl(val, controlValue, deg, 0, 0)
 }
 
 /*
 Rotate Y gate
 */
-func (q *QBitsCircuit) PhaseY(val int, controlValue int, deg float64) {
-	q.phaseImpl(val, controlValue, 0, deg, 0)
+func (q *QBitsCircuit) RotY(val int, controlValue int, deg float64) {
+	q.rotImpl(val, controlValue, 0, deg, 0)
 }
 
 /*
 Rotate X gate
 */
-func (q *QBitsCircuit) PhaseZ(val int, controlValue int, deg float64) {
-	q.phaseImpl(val, controlValue, 0, 0, deg)
+func (q *QBitsCircuit) RotZ(val int, controlValue int, deg float64) {
+	q.rotImpl(val, controlValue, 0, 0, deg)
 }
 
 /*
 Rotate gate
 */
-func (q *QBitsCircuit) phaseImpl(val int, controlValue int, degX, degY, degZ float64) {
+func (q *QBitsCircuit) rotImpl(val int, controlValue int, degX, degY, degZ float64) {
 
 	thetaX := degX * (math.Pi / 180.0)
 	thetaY := degY * (math.Pi / 180.0)
@@ -462,22 +463,22 @@ func (q *QBitsCircuit) phaseImpl(val int, controlValue int, degX, degY, degZ flo
 	var v00, v01, v10, v11 complex128
 
 	if thetaX > 0 {
-		v00 = complex(math.Cos(thetaX), 0)
-		v01 = complex(0, -math.Sin(thetaX))
-		v10 = complex(0, -math.Sin(thetaX))
-		v11 = complex(math.Cos(thetaX), 0)
+		v00 = complex(math.Cos(thetaX/2.0), 0)
+		v01 = complex(0, -math.Sin(thetaX/2.0))
+		v10 = complex(0, -math.Sin(thetaX/2.0))
+		v11 = complex(math.Cos(thetaX/2.0), 0)
 	}
 	if thetaY > 0 {
-		v00 = complex(math.Cos(thetaY), 0)
-		v01 = complex(-math.Sin(thetaY), 0)
-		v10 = complex(math.Sin(thetaY), 0)
-		v11 = complex(math.Cos(thetaY), 0)
+		v00 = complex(math.Cos(thetaY/2.0), 0)
+		v01 = complex(-math.Sin(thetaY/2.0), 0)
+		v10 = complex(math.Sin(thetaY/2.0), 0)
+		v11 = complex(math.Cos(thetaY/2.0), 0)
 	}
 	if thetaZ > 0 {
-		v00 = cmplx.Exp(complex(0, -thetaZ))
+		v00 = cmplx.Exp(complex(0, -thetaZ/2.0))
 		v01 = complex(0, 0)
 		v10 = complex(0, 0)
-		v11 = cmplx.Exp(complex(0, thetaZ))
+		v11 = cmplx.Exp(complex(0, thetaZ/2.0))
 	}
 
 	m := mat.NewMatrix(2, 2)
@@ -488,18 +489,69 @@ func (q *QBitsCircuit) phaseImpl(val int, controlValue int, degX, degY, degZ flo
 
 	q.Unitary(val, controlValue, &m)
 
-	opType := ""
-	if degX == 180 && degY == 0 && degZ == 0 {
-		opType = OperationTypeX
-	} else if degX == 0 && degY == 180 && degZ == 0 {
-		opType = OperationTypeY
-	} else if degX == 0 && degY == 0 && degZ == 180 {
-		opType = OperationTypeZ
-	} else {
-		opType = OperationTypePhase
-	}
+	q.addOperation(OperationTypeRotate, q.GetRegister(val), val, controlValue, 0, []float64{degX, degY, degZ})
+}
 
-	q.addOperation(opType, q.GetRegister(val), val, controlValue, 0, []float64{degX, degY, degZ})
+/*
+Phase Gate
+*/
+func (q *QBitsCircuit) Phase(val int, controlValue int, deg float64) {
+	thetaZ := deg * (math.Pi / 180.0)
+
+	m := mat.NewMatrix(2, 2)
+	m.Set(0, 0, 1)
+	m.Set(0, 1, 0)
+	m.Set(1, 0, 0)
+	m.Set(1, 1, cmplx.Exp(complex(0, thetaZ)))
+
+	q.Unitary(val, controlValue, &m)
+
+	q.addOperation(OperationTypePhase, q.GetRegister(val), val, controlValue, 0, []float64{deg})
+}
+
+/*
+X Gate
+*/
+func (q *QBitsCircuit) X(val int, controlValue int) {
+	m := mat.NewMatrix(2, 2)
+	m.Set(0, 0, complex(0, 0))
+	m.Set(0, 1, complex(1, 0))
+	m.Set(1, 0, complex(1, 0))
+	m.Set(1, 1, complex(0, 0))
+
+	q.Unitary(val, controlValue, &m)
+
+	q.addOperation(OperationTypeX, q.GetRegister(val), val, controlValue, 0, nil)
+}
+
+/*
+Y Gate
+*/
+func (q *QBitsCircuit) Y(val int, controlValue int) {
+	m := mat.NewMatrix(2, 2)
+	m.Set(0, 0, complex(0, 0))
+	m.Set(0, 1, complex(0, -1))
+	m.Set(1, 0, complex(0, 1))
+	m.Set(1, 1, complex(0, 0))
+
+	q.Unitary(val, controlValue, &m)
+
+	q.addOperation(OperationTypeY, q.GetRegister(val), val, controlValue, 0, nil)
+}
+
+/*
+Z Gate
+*/
+func (q *QBitsCircuit) Z(val int, controlValue int) {
+	m := mat.NewMatrix(2, 2)
+	m.Set(0, 0, complex(1, 0))
+	m.Set(0, 1, complex(0, 0))
+	m.Set(1, 0, complex(0, 0))
+	m.Set(1, 1, complex(-1, 0))
+
+	q.Unitary(val, controlValue, &m)
+
+	q.addOperation(OperationTypeZ, q.GetRegister(val), val, controlValue, 0, nil)
 }
 
 /*
@@ -551,7 +603,7 @@ func (q *QBitsCircuit) QFT(val int) {
 		q.Had(int(highestQbit), 0)
 		deg := -90.0
 		for i := j - 1; i >= 0; i-- {
-			q.PhaseZ(int(highestQbit), int(idxs[i]), deg)
+			q.Phase(int(highestQbit), int(idxs[i]), deg)
 			deg = deg / 2.0
 		}
 	}
@@ -579,7 +631,7 @@ func (q *QBitsCircuit) InversedQFT(val int) {
 		q.Had(int(lowestQbit), 0)
 		deg := 90.0
 		for i := j + 1; i < len(idxs); i++ {
-			q.PhaseZ(int(lowestQbit), int(idxs[i]), deg)
+			q.Phase(int(lowestQbit), int(idxs[i]), deg)
 			deg = deg / 2.0
 		}
 	}
@@ -601,7 +653,7 @@ func (q *QBitsCircuit) Grover(val int) {
 		}
 	}
 	//fmt.Println("Grover", idxs[0], controlVal)
-	q.PhaseZ(int(idxs[0]), controlVal, 180)
+	q.Phase(int(idxs[0]), controlVal, 180)
 	q.Not(val, 0)
 	q.Had(val, 0)
 }

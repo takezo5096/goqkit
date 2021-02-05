@@ -118,37 +118,37 @@ func (reg *Register) Had(val int, control int) {
 }
 
 /*
-Apply Phase Gate to all qbits in this register
+Apply Rotate Gate to all qbits in this register
 
 deg: degree to rotate
 
 */
-func (reg *Register) PhaseXAll(deg float64) {
-	reg.circuit.PhaseX(int(reg.qBits), 0, deg)
+func (reg *Register) RotXAll(deg float64) {
+	reg.circuit.RotX(int(reg.qBits), 0, deg)
 }
 
 /*
-Apply Phase Gate to all qbits in this register
+Apply Rotate Gate to all qbits in this register
 
 deg: degree to rotate
 
 */
-func (reg *Register) PhaseYAll(deg float64) {
-	reg.circuit.PhaseY(int(reg.qBits), 0, deg)
+func (reg *Register) RotYAll(deg float64) {
+	reg.circuit.RotY(int(reg.qBits), 0, deg)
 }
 
 /*
-Apply Phase Gate to all qbits in this register
+Apply Rotate Gate to all qbits in this register
 
 deg: degree to rotate
 
 */
-func (reg *Register) PhaseZAll(deg float64) {
-	reg.circuit.PhaseZ(int(reg.qBits), 0, deg)
+func (reg *Register) RotZAll(deg float64) {
+	reg.circuit.RotZ(int(reg.qBits), 0, deg)
 }
 
 /*
-Apply Phase Gate to the value which specified val with control qbits.
+Apply Rotate Gate to the value which specified val with control qbits.
 
 val: local qbits value
 
@@ -156,13 +156,13 @@ control: global control qbits value
 
 deg: degree to rotate
 */
-func (reg *Register) PhaseX(val int, control int, deg float64) {
+func (reg *Register) RotX(val int, control int, deg float64) {
 	qbits := reg.ToGlobalQBits(val)
-	reg.circuit.PhaseX(qbits, control, deg)
+	reg.circuit.RotX(qbits, control, deg)
 }
 
 /*
-Apply Phase Gate to the value which specified val with control qbits.
+Apply Rotate Gate to the value which specified val with control qbits.
 
 val: local qbits value
 
@@ -170,13 +170,13 @@ control: global control qbits value
 
 deg: degree to rotate
 */
-func (reg *Register) PhaseY(val int, control int, deg float64) {
+func (reg *Register) RotY(val int, control int, deg float64) {
 	qbits := reg.ToGlobalQBits(val)
-	reg.circuit.PhaseY(qbits, control, deg)
+	reg.circuit.RotY(qbits, control, deg)
 }
 
 /*
-Apply Phase Gate to the value which specified val with control qbits.
+Apply Rotate Gate to the value which specified val with control qbits.
 
 val: local qbits value
 
@@ -184,46 +184,60 @@ control: global control qbits value
 
 deg: degree to rotate
 */
-func (reg *Register) PhaseZ(val int, control int, deg float64) {
+func (reg *Register) RotZ(val int, control int, deg float64) {
 	qbits := reg.ToGlobalQBits(val)
-	reg.circuit.PhaseZ(qbits, control, deg)
+	reg.circuit.RotZ(qbits, control, deg)
 }
 
 /*
 Apply X Gate to the value with control qbits.
-X Gate is that Phase Gate by rotating 180 degree around X axis.
 
 val: local qbits value
 
 control: global control qbits value
 */
+func (reg *Register) XAll() {
+	reg.circuit.X(int(reg.qBits), 0)
+}
 func (reg *Register) X(val int, control int) {
-	reg.PhaseX(val, control, 180)
+	reg.X(val, control)
 }
 
 /*
 Apply Y Gate to the value with control qbits.
-Y Gate is that Phase Gate by rotating 180 degree around Y axis.
 
 val: local qbits value
 
 control: global control qbits value
 */
+func (reg *Register) YAll() {
+	reg.circuit.Y(int(reg.qBits), 0)
+}
 func (reg *Register) Y(val int, control int) {
-	reg.PhaseY(val, control, 180)
+	reg.Y(val, control)
 }
 
 /*
 Apply Z Gate to the value with control qbits.
-Z Gate is that Phase Gate by rotating 180 degree around Z axis.
 
 val: local qbits value
 
 control: global control qbits value
 
 */
+func (reg *Register) ZAll() {
+	reg.circuit.Z(int(reg.qBits), 0)
+}
 func (reg *Register) Z(val int, control int) {
-	reg.PhaseZ(val, control, 180)
+	reg.Z(val, control)
+}
+
+func (reg *Register) PhaseAll(deg float64) {
+	reg.circuit.Phase(int(reg.qBits), 0, deg)
+}
+func (reg *Register) Phase(val int, control int, deg float64) {
+	qbits := reg.ToGlobalQBits(val)
+	reg.circuit.Phase(qbits, control, deg)
 }
 
 /*
