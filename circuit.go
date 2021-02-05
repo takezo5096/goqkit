@@ -430,9 +430,30 @@ func (q *QBitsCircuit) NotWithoutOp(val int, controlValue int) {
 }
 
 /*
+Rotate X gate
+*/
+func (q *QBitsCircuit) PhaseX(val int, controlValue int, deg float64) {
+	q.phaseImpl(val, controlValue, deg, 0, 0)
+}
+
+/*
+Rotate Y gate
+*/
+func (q *QBitsCircuit) PhaseY(val int, controlValue int, deg float64) {
+	q.phaseImpl(val, controlValue, 0, deg, 0)
+}
+
+/*
+Rotate X gate
+*/
+func (q *QBitsCircuit) PhaseZ(val int, controlValue int, deg float64) {
+	q.phaseImpl(val, controlValue, 0, 0, deg)
+}
+
+/*
 Rotate gate
 */
-func (q *QBitsCircuit) Phase(val int, controlValue int, degX, degY, degZ float64) {
+func (q *QBitsCircuit) phaseImpl(val int, controlValue int, degX, degY, degZ float64) {
 
 	thetaX := degX * (math.Pi / 180.0)
 	thetaY := degY * (math.Pi / 180.0)
@@ -530,7 +551,7 @@ func (q *QBitsCircuit) QFT(val int) {
 		q.Had(int(highestQbit), 0)
 		deg := -90.0
 		for i := j - 1; i >= 0; i-- {
-			q.Phase(int(highestQbit), int(idxs[i]), 0, 0, deg)
+			q.PhaseZ(int(highestQbit), int(idxs[i]), deg)
 			deg = deg / 2.0
 		}
 	}
@@ -558,7 +579,7 @@ func (q *QBitsCircuit) InversedQFT(val int) {
 		q.Had(int(lowestQbit), 0)
 		deg := 90.0
 		for i := j + 1; i < len(idxs); i++ {
-			q.Phase(int(lowestQbit), int(idxs[i]), 0, 0, deg)
+			q.PhaseZ(int(lowestQbit), int(idxs[i]), deg)
 			deg = deg / 2.0
 		}
 	}
@@ -580,7 +601,7 @@ func (q *QBitsCircuit) Grover(val int) {
 		}
 	}
 	//fmt.Println("Grover", idxs[0], controlVal)
-	q.Phase(int(idxs[0]), controlVal, 0, 0, 180)
+	q.PhaseZ(int(idxs[0]), controlVal, 180)
 	q.Not(val, 0)
 	q.Had(val, 0)
 }

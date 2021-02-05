@@ -124,7 +124,7 @@ deg: degree to rotate
 
 */
 func (reg *Register) PhaseXAll(deg float64) {
-	reg.circuit.Phase(int(reg.qBits), 0, deg, 0, 0)
+	reg.circuit.PhaseX(int(reg.qBits), 0, deg)
 }
 
 /*
@@ -134,7 +134,7 @@ deg: degree to rotate
 
 */
 func (reg *Register) PhaseYAll(deg float64) {
-	reg.circuit.Phase(int(reg.qBits), 0, 0, deg, 0)
+	reg.circuit.PhaseY(int(reg.qBits), 0, deg)
 }
 
 /*
@@ -144,7 +144,7 @@ deg: degree to rotate
 
 */
 func (reg *Register) PhaseZAll(deg float64) {
-	reg.circuit.Phase(int(reg.qBits), 0, 0, 0, deg)
+	reg.circuit.PhaseZ(int(reg.qBits), 0, deg)
 }
 
 /*
@@ -158,7 +158,7 @@ deg: degree to rotate
 */
 func (reg *Register) PhaseX(val int, control int, deg float64) {
 	qbits := reg.ToGlobalQBits(val)
-	reg.circuit.Phase(qbits, control, deg, 0, 0)
+	reg.circuit.PhaseX(qbits, control, deg)
 }
 
 /*
@@ -172,7 +172,7 @@ deg: degree to rotate
 */
 func (reg *Register) PhaseY(val int, control int, deg float64) {
 	qbits := reg.ToGlobalQBits(val)
-	reg.circuit.Phase(qbits, control, 0, deg, 0)
+	reg.circuit.PhaseY(qbits, control, deg)
 }
 
 /*
@@ -186,7 +186,7 @@ deg: degree to rotate
 */
 func (reg *Register) PhaseZ(val int, control int, deg float64) {
 	qbits := reg.ToGlobalQBits(val)
-	reg.circuit.Phase(qbits, control, 0, 0, deg)
+	reg.circuit.PhaseZ(qbits, control, deg)
 }
 
 /*
