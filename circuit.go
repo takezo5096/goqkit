@@ -462,22 +462,22 @@ func (q *QBitsCircuit) phaseImpl(val int, controlValue int, degX, degY, degZ flo
 	var v00, v01, v10, v11 complex128
 
 	if thetaX > 0 {
-		v00 = complex(math.Cos(thetaX/2.0), 0)
-		v01 = complex(0, -math.Sin(thetaX/2.0))
-		v10 = complex(0, -math.Sin(thetaX/2.0))
-		v11 = complex(math.Cos(thetaX/2.0), 0)
+		v00 = complex(math.Cos(thetaX), 0)
+		v01 = complex(0, -math.Sin(thetaX))
+		v10 = complex(0, -math.Sin(thetaX))
+		v11 = complex(math.Cos(thetaX), 0)
 	}
 	if thetaY > 0 {
-		v00 = complex(math.Cos(thetaY/2.0), 0)
-		v01 = complex(-math.Sin(thetaY/2.0), 0)
-		v10 = complex(math.Sin(thetaY/2.0), 0)
-		v11 = complex(math.Cos(thetaY/2.0), 0)
+		v00 = complex(math.Cos(thetaY), 0)
+		v01 = complex(-math.Sin(thetaY), 0)
+		v10 = complex(math.Sin(thetaY), 0)
+		v11 = complex(math.Cos(thetaY), 0)
 	}
 	if thetaZ > 0 {
-		v00 = cmplx.Exp(complex(0, -thetaZ/2.0))
+		v00 = cmplx.Exp(complex(0, -thetaZ))
 		v01 = complex(0, 0)
 		v10 = complex(0, 0)
-		v11 = cmplx.Exp(complex(0, thetaZ/2.0))
+		v11 = cmplx.Exp(complex(0, thetaZ))
 	}
 
 	m := mat.NewMatrix(2, 2)
