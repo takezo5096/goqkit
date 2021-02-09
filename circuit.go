@@ -174,21 +174,21 @@ func (q *QBitsCircuit) printQBitsImpl(printType int, start, end int) {
 		if printType == PrintTypePolar {
 			r, theta := cmplx.Polar(e)
 			if r > 0 {
-				fmt.Printf("(\x1b[32m%.1f\x1b[0m,", r)
+				fmt.Printf("(\x1b[32m%.2f\x1b[0m,", r)
 			} else if r < 0 {
-				fmt.Printf("(\x1b[31m%.1f\x1b[0m,", r)
+				fmt.Printf("(\x1b[31m%.2f\x1b[0m,", r)
 			} else {
-				fmt.Printf("(%.1f,", r)
+				fmt.Printf("(%.2f,", r)
 			}
 			if theta > 0 {
-				fmt.Printf("\x1b[32m%.1f\x1b[0m)", theta/math.Pi*180)
+				fmt.Printf("\x1b[32m%.2f\x1b[0m)", theta/math.Pi*180)
 			} else if theta < 0 {
-				fmt.Printf("\x1b[31m%.1f\x1b[0m)", theta/math.Pi*180)
+				fmt.Printf("\x1b[31m%.2f\x1b[0m)", theta/math.Pi*180)
 			} else {
-				fmt.Printf("%.1f)", theta/math.Pi*180)
+				fmt.Printf("%.2f)", theta/math.Pi*180)
 			}
 		} else {
-			fmt.Printf("%.1f", e)
+			fmt.Printf("%.2f", e)
 		}
 	}
 	fmt.Println("")
