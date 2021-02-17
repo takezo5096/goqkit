@@ -200,7 +200,7 @@ func (reg *Register) XAll() {
 	reg.circuit.X(int(reg.qBits), 0)
 }
 func (reg *Register) X(val int, control int) {
-	reg.X(val, control)
+	reg.circuit.X(val, control)
 }
 
 /*
@@ -214,7 +214,7 @@ func (reg *Register) YAll() {
 	reg.circuit.Y(int(reg.qBits), 0)
 }
 func (reg *Register) Y(val int, control int) {
-	reg.Y(val, control)
+	reg.circuit.Y(val, control)
 }
 
 /*
@@ -229,7 +229,7 @@ func (reg *Register) ZAll() {
 	reg.circuit.Z(int(reg.qBits), 0)
 }
 func (reg *Register) Z(val int, control int) {
-	reg.Z(val, control)
+	reg.circuit.Z(val, control)
 }
 
 func (reg *Register) PhaseAll(deg float64) {
