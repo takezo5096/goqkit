@@ -200,7 +200,8 @@ func (reg *Register) XAll() {
 	reg.circuit.X(int(reg.qBits), 0)
 }
 func (reg *Register) X(val int, control int) {
-	reg.circuit.X(val, control)
+	qbits := reg.ToGlobalQBits(val)
+	reg.circuit.X(qbits, control)
 }
 
 /*
@@ -214,7 +215,8 @@ func (reg *Register) YAll() {
 	reg.circuit.Y(int(reg.qBits), 0)
 }
 func (reg *Register) Y(val int, control int) {
-	reg.circuit.Y(val, control)
+	qbits := reg.ToGlobalQBits(val)
+	reg.circuit.Y(qbits, control)
 }
 
 /*
@@ -229,7 +231,8 @@ func (reg *Register) ZAll() {
 	reg.circuit.Z(int(reg.qBits), 0)
 }
 func (reg *Register) Z(val int, control int) {
-	reg.circuit.Z(val, control)
+	qbits := reg.ToGlobalQBits(val)
+	reg.circuit.Z(qbits, control)
 }
 
 func (reg *Register) PhaseAll(deg float64) {
