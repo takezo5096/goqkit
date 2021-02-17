@@ -253,6 +253,7 @@ control: global control qbits value
 func (reg *Register) Swap(targetVal int, swapVal int, control int) {
 	tqbits := reg.ToGlobalQBits(targetVal)
 	reg.circuit.Swap(tqbits, swapVal, control)
+
 }
 
 /*
