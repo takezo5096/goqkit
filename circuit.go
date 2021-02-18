@@ -38,6 +38,7 @@ type QBitsCircuit struct {
 }
 
 const (
+	OperationTypeSpace  = "Sp"
 	OperationTypeRead   = "R"
 	OperationTypeWrite  = "W"
 	OperationTypeHad    = "H"
@@ -642,6 +643,8 @@ Grover Algorithm
 */
 func (q *QBitsCircuit) Grover(val int) {
 
+	q.addOperation(OperationTypeSpace, q.GetRegister(val), 0, 0, 0, nil)
+
 	q.Had(val, 0)
 	q.Not(val, 0)
 
@@ -745,6 +748,10 @@ func (q *QBitsCircuit) addOperation(opName string, reg *Register, target int, co
 		} else {
 			op = Operation{OpName: opName, RegisterName: 1 << reg.shift, TargetQBit: t, ControlQBits: nil, SwapQBit: uint(swap), Options: options}
 		}
+		q.operations = append(q.operations, op)
+	}
+	if opName == OperationTypeSpace {
+		op := Operation{OpName: opName, RegisterName: 1 << reg.shift, TargetQBit: 0, ControlQBits: nil, SwapQBit: uint(swap), Options: options}
 		q.operations = append(q.operations, op)
 	}
 }
