@@ -639,6 +639,13 @@ func (q *QBitsCircuit) InversedQFT(val int) {
 }
 
 /*
+ To add non-operation (add a space)
+*/
+func (q *QBitsCircuit) OpSpace() {
+	q.addOperation(OperationTypeSpace, q.GetRegister(1), 0, 0, 0, nil)
+}
+
+/*
 Grover Algorithm
 */
 func (q *QBitsCircuit) Grover(val int) {
@@ -823,7 +830,7 @@ func (q *QBitsCircuit) FileDumpAll(path string) {
 
 	file, err := os.Create(path)
 	if err != nil {
-		log.Fatal(err) //ファイルが開けなかったときエラー出力
+		log.Fatal(err)
 	}
 	defer file.Close()
 
