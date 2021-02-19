@@ -12,6 +12,9 @@ type Register struct {
 	shift int
 	//Pointer of the circuit.
 	circuit *QBitsCircuit
+
+	//Name
+	Name string
 }
 
 /*

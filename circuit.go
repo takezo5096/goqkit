@@ -52,12 +52,13 @@ const (
 )
 
 type Operation struct {
-	OpName       string    `json:"op_name"`
-	RegisterName int       `json:"register_name"`
-	TargetQBit   uint      `json:"target_qbit"`
-	ControlQBits []uint    `json:"control_qbits"`
-	SwapQBit     uint      `json:"swap_qbit"`
-	Options      []float64 `json:"options"`
+	OpName             string    `json:"op_name"`
+	RegisterName       int       `json:"register_name"`
+	RegisterNameString string    `json:"register_name_string"`
+	TargetQBit         uint      `json:"target_qbit"`
+	ControlQBits       []uint    `json:"control_qbits"`
+	SwapQBit           uint      `json:"swap_qbit"`
+	Options            []float64 `json:"options"`
 }
 
 type DumpFormat struct {
@@ -70,6 +71,7 @@ type DumpFormatRegister struct {
 	NumberOfQBits int    `json:"number_of_qbits"`
 	QBits         []uint `json:"qbits"`
 	Shift         int    `json:"shift"`
+	Name          string `json:"reg_name"`
 }
 
 const (
@@ -109,7 +111,7 @@ Assign qbits for the register
 
 num: The number of qbits which you want to assign
 */
-func (q *QBitsCircuit) AssignQBits(num int) *Register {
+func (q *QBitsCircuit) AssignQBits(num int, name string) *Register {
 	var qbits uint = 0
 	var shift = int(q.QBitNumber) - q.qBitsQueue.Size()
 	cnt := 0
@@ -118,7 +120,7 @@ func (q *QBitsCircuit) AssignQBits(num int) *Register {
 		qbits = qbits | uint(qbitIndex)
 		cnt++
 	}
-	reg := Register{numberOfQBits: cnt, qBits: qbits, shift: shift, circuit: q}
+	reg := Register{numberOfQBits: cnt, qBits: qbits, shift: shift, circuit: q, Name: name}
 	q.qBitRegisters = append(q.qBitRegisters, &reg)
 	return &reg
 }
@@ -748,17 +750,18 @@ func (q *QBitsCircuit) subtractImpl(controlVal int, controlValue int) {
 
 func (q *QBitsCircuit) addOperation(opName string, reg *Register, target int, control int, swap int, options []float64) {
 	controls := q.GetQBits(control)
+
 	for _, t := range q.GetQBits(target) {
 		var op Operation
 		if len(controls) > 0 {
-			op = Operation{OpName: opName, RegisterName: 1 << reg.shift, TargetQBit: t, ControlQBits: controls, SwapQBit: uint(swap), Options: options}
+			op = Operation{OpName: opName, RegisterName: 1 << reg.shift, RegisterNameString: reg.Name, TargetQBit: t, ControlQBits: controls, SwapQBit: uint(swap), Options: options}
 		} else {
-			op = Operation{OpName: opName, RegisterName: 1 << reg.shift, TargetQBit: t, ControlQBits: nil, SwapQBit: uint(swap), Options: options}
+			op = Operation{OpName: opName, RegisterName: 1 << reg.shift, RegisterNameString: reg.Name, TargetQBit: t, ControlQBits: nil, SwapQBit: uint(swap), Options: options}
 		}
 		q.operations = append(q.operations, op)
 	}
 	if opName == OperationTypeSpace {
-		op := Operation{OpName: opName, RegisterName: 1 << reg.shift, TargetQBit: 0, ControlQBits: nil, SwapQBit: uint(swap), Options: options}
+		op := Operation{OpName: opName, RegisterName: 1 << reg.shift, RegisterNameString: reg.Name, TargetQBit: 0, ControlQBits: nil, SwapQBit: uint(swap), Options: options}
 		q.operations = append(q.operations, op)
 	}
 }
@@ -802,12 +805,17 @@ func (q QBitsCircuit) DumpAll() string {
 	}
 
 	var registers []DumpFormatRegister
-	for _, reg := range q.qBitRegisters {
+	for i, reg := range q.qBitRegisters {
 
 		newReg := DumpFormatRegister{}
 		newReg.Shift = reg.shift
 		newReg.NumberOfQBits = reg.numberOfQBits
 		newReg.QBits = q.GetQBits(int(reg.GetQBits()))
+		if reg.Name != "" {
+			newReg.Name = reg.Name
+		} else {
+			newReg.Name = fmt.Sprintf("Reg%d", i+1)
+		}
 		registers = append(registers, newReg)
 	}
 
