@@ -17,8 +17,8 @@ import (
 func main() {
 	n := 2 //number of qbits
 	circuit := goqkit.MakeQBitsCircuit(n)
-	reg1 := circuit.AssignQBits(1)
-	reg2 := circuit.AssignQBits(1)
+	reg1 := circuit.AssignQBits(1, "reg1")
+	reg2 := circuit.AssignQBits(1, "reg2")
 
 	reg1.Write(0)
 	reg2.Write(0)
