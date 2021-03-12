@@ -16,8 +16,6 @@ import (
 	"math/cmplx"
 	"math/rand"
 	"os"
-	"runtime"
-	"sync"
 	"time"
 )
 
@@ -371,31 +369,16 @@ func (q *QBitsCircuit) Unitary(val int, controlValue int, m *mat.Matrix) {
 
 	for _, targetQBit := range targetQBits {
 		pairs := q.GetQBitPairs(targetQBit)
-
-		var wg sync.WaitGroup
-
-		cpus := runtime.NumCPU()
-		runtime.GOMAXPROCS(cpus)
-
-		semaphore := make(chan int, cpus)
-
-		for i, pair := range pairs {
-			wg.Add(1)
-			go func(i int) {
-				defer wg.Done()
-				semaphore <- 1
-				if controlValue == 0 || int(pair[0])&controlValue == controlValue {
-					qbit := mat.NewVector(2)
-					qbit.Set(0, q.RawQBits.At(pair[0]))
-					qbit.Set(1, q.RawQBits.At(pair[1]))
-					newQBit := m.Dot(qbit)
-					q.RawQBits.Set(pair[0], newQBit.At(0))
-					q.RawQBits.Set(pair[1], newQBit.At(1))
-				}
-				<-semaphore
-			}(i)
+		for _, pair := range pairs {
+			if controlValue == 0 || int(pair[0])&controlValue == controlValue {
+				qbit := mat.NewVector(2)
+				qbit.Set(0, q.RawQBits.At(pair[0]))
+				qbit.Set(1, q.RawQBits.At(pair[1]))
+				newQBit := m.Dot(qbit)
+				q.RawQBits.Set(pair[0], newQBit.At(0))
+				q.RawQBits.Set(pair[1], newQBit.At(1))
+			}
 		}
-		wg.Wait()
 	}
 }
 
