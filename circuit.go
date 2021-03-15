@@ -290,6 +290,34 @@ func (q *QBitsCircuit) ReadQBits(val int) int {
 	return ret
 }
 
+func (q *QBitsCircuit) Probability(targetIndex uint) (float64, float64) {
+	pairs := q.GetQBitPairs(targetIndex)
+
+	var v0 float64
+	var v1 float64
+
+	v0 = 0
+	v1 = 0
+	v0q := make(map[uint]int, 0)
+	v1q := make(map[uint]int, 0)
+	for _, pair := range pairs {
+		tmp0 := math.Pow(cmplx.Abs(q.RawQBits.At(pair[0])), 2)
+		tmp1 := math.Pow(cmplx.Abs(q.RawQBits.At(pair[1])), 2)
+		if tmp0 > 0 {
+			v0q[pair[0]]++
+		}
+		if tmp1 > 0 {
+			v1q[pair[1]]++
+		}
+		v0 += tmp0
+		v1 += tmp1
+	}
+
+	prob0 := v0 / (v0 + v1)
+
+	return prob0, 1.0 - prob0
+}
+
 /*
 Read qbits specified by val and return val
 */
