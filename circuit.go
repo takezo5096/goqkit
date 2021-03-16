@@ -498,19 +498,19 @@ func (q *QBitsCircuit) rotImpl(val int, controlValue int, degX, degY, degZ float
 	v10 = 0
 	v11 = 1
 
-	if thetaX > 0 {
+	if math.Abs(thetaX) > 0 {
 		v00 = complex(math.Cos(thetaX/2.0), 0)
 		v01 = complex(0, -math.Sin(thetaX/2.0))
 		v10 = complex(0, -math.Sin(thetaX/2.0))
 		v11 = complex(math.Cos(thetaX/2.0), 0)
 	}
-	if thetaY > 0 {
+	if math.Abs(thetaY) > 0 {
 		v00 = complex(math.Cos(thetaY/2.0), 0)
 		v01 = complex(-math.Sin(thetaY/2.0), 0)
 		v10 = complex(math.Sin(thetaY/2.0), 0)
 		v11 = complex(math.Cos(thetaY/2.0), 0)
 	}
-	if thetaZ > 0 {
+	if math.Abs(thetaZ) > 0 {
 		v00 = cmplx.Exp(complex(0, -thetaZ/2.0))
 		v01 = complex(0, 0)
 		v10 = complex(0, 0)
