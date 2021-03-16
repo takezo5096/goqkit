@@ -493,6 +493,11 @@ func (q *QBitsCircuit) rotImpl(val int, controlValue int, degX, degY, degZ float
 
 	var v00, v01, v10, v11 complex128
 
+	v00 = 1
+	v01 = 0
+	v10 = 0
+	v11 = 1
+
 	if thetaX > 0 {
 		v00 = complex(math.Cos(thetaX/2.0), 0)
 		v01 = complex(0, -math.Sin(thetaX/2.0))
