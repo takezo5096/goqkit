@@ -197,6 +197,37 @@ func Sigma(data []float64) float64 {
 	}
 	return s / float64(len(data))
 }
+
+func NormalizeMinMax(data [][]float64, rangeMin float64, rangeMax float64) [][]float64 {
+	norm := make([][]float64, len(data))
+
+	maxs := make([]float64, len(data[0]))
+	mins := make([]float64, len(data[0]))
+	for i := 0; i < len(data[0]); i++ {
+		mins[i] = 10e8
+	}
+
+	for i := 0; i < len(data); i++ {
+		for j := 0; j < len(data[i]); j++ {
+			if mins[j] > data[i][j] {
+				mins[j] = data[i][j]
+			}
+			if maxs[j] < data[i][j] {
+				maxs[j] = data[i][j]
+			}
+		}
+	}
+
+	for i := 0; i < len(data); i++ {
+		norm[i] = make([]float64, len(data[i]))
+		for j := 0; j < len(data[i]); j++ {
+			norm[i][j] = (data[i][j]-mins[j])/(maxs[j]-mins[j])*(rangeMax-rangeMin) + rangeMin
+		}
+	}
+	return norm
+}
+
+/*
 func NormalizeMinMax(data [][]float64, rangeMin float64, rangeMax float64) [][]float64 {
 	norm := make([][]float64, len(data))
 
@@ -221,6 +252,7 @@ func NormalizeMinMax(data [][]float64, rangeMin float64, rangeMax float64) [][]f
 	}
 	return norm
 }
+*/
 
 func Normalize(data []float64) []float64 {
 	m := Mean(data)

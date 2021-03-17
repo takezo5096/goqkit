@@ -5,6 +5,7 @@ import (
 	"github.com/takezo5096/goqkit/ml/dataset"
 	"github.com/takezo5096/goqkit/ml/optimizer"
 	"math"
+	"math/rand"
 )
 
 type TrainingStatusHandler func(int, float64, float64, int, int)
@@ -38,7 +39,7 @@ func (c *Classifier) Train(opti optimizer.Optimizer, epoch int) {
 	for i := 0; i < len(c.theta); i++ {
 		c.theta[i] = make([]float64, c.NumberOfQBits)
 		for j := 0; j < len(c.theta[i]); j++ {
-			c.theta[i][j] = math.Pi
+			c.theta[i][j] = rand.NormFloat64() * math.Pi * 2
 		}
 	}
 
@@ -153,7 +154,7 @@ func (c *Classifier) loss(prediction []float64, target []float64) float64 {
 
 func (c *Classifier) gradient(X []float64, Y []float64) [][]float64 {
 
-	delta := 10e-8
+	deltaTmp := math.Nextafter(1, 2) - 1
 
 	grad := make([][]float64, len(c.theta))
 	dtheta := make([][]float64, len(c.theta))
@@ -166,6 +167,10 @@ func (c *Classifier) gradient(X []float64, Y []float64) [][]float64 {
 
 	for i := 0; i < len(c.theta); i++ {
 		for j := 0; j < len(c.theta[i]); j++ {
+			delta := math.Sqrt(deltaTmp) * math.Abs(c.theta[i][j])
+			if delta == 0.0 {
+				delta = math.Sqrt(deltaTmp)
+			}
 			dtheta[i][j] += delta
 			dtheta2[i][j] -= delta
 

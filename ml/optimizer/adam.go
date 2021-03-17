@@ -38,7 +38,7 @@ func (a *Adam) Gradient(grad [][]float64) [][]float64 {
 
 	for j := 0; j < len(grad); j++ {
 		delta[j] = make([]float64, len(grad[j]))
-		for i := 0; i < len(grad); i++ {
+		for i := 0; i < len(grad[j]); i++ {
 			if a.t == 1 {
 				a.m[j][i] = grad[j][i]
 				a.v[j][i] = grad[j][i] * grad[j][i]
