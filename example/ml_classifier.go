@@ -10,6 +10,8 @@ import (
 )
 
 func MLClassifier() {
+
+	//should change the path for iris.data
 	X, Y, err := dataset.IrisDataset("./test/iris.data", -1)
 	if err != nil {
 		log.Fatal(err)
